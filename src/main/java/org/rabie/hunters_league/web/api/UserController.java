@@ -3,8 +3,11 @@ package org.rabie.hunters_league.web.api;
 import org.rabie.hunters_league.domain.User;
 import org.rabie.hunters_league.service.UserService;
 import org.rabie.hunters_league.web.vm.mapper.UserMapper;
+import org.rabie.hunters_league.web.vm.request.UserUpdateVm;
 import org.rabie.hunters_league.web.vm.response.ListUserVm;
+import org.rabie.hunters_league.web.vm.response.UserResponseVm;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +31,14 @@ public class UserController {
     public Page<ListUserVm> getUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+        Page<User> users = userService.getAllUsers(page, size);
         return userService.getAllUsers(page, size).map(userMapper::toListUserVm);
+    }
 
-
+    @PutMapping("/update")
+    public ResponseEntity<UserResponseVm> updateUser(@RequestBody UserUpdateVm userUpdateVm) {
+        User user = userMapper.toUserFromUpdateVm(userUpdateVm);
+        User updatedUser = userService.update(user);
+        return ResponseEntity.ok(userMapper.toUserResponseVm(updatedUser));
     }
 }

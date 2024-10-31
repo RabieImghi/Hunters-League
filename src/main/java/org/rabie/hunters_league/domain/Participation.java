@@ -10,8 +10,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Participation{
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,5 +27,6 @@ public class Participation{
     private List<Hunt> hunts;
 
     private Double score;
+
 
 }

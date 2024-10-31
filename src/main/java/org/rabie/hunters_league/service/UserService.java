@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class UserService {
 
@@ -24,6 +26,9 @@ public class UserService {
 
     }
 
+    public User getById(UUID id) {
+        return userRepository.findById(id).orElse(new User());
+    }
     public User save(User user) {
         if(userRepository.findByEmail(user.getEmail())!= null) throw new UserNotExistException("User with email: " + user.getEmail() + " already exist");
         if(userRepository.findByUsername(user.getUsername())!= null) throw new UserNotExistException("User with username: " + user.getUsername() + " already exist");
