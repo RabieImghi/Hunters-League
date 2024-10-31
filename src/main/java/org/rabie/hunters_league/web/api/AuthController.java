@@ -4,8 +4,8 @@ import org.rabie.hunters_league.domain.User;
 import org.rabie.hunters_league.service.UserService;
 import org.rabie.hunters_league.web.vm.mapper.UserMapper;
 import org.rabie.hunters_league.web.vm.request.LoginVM;
-import org.rabie.hunters_league.web.vm.request.UserUpdateVm;
 import org.rabie.hunters_league.web.vm.request.UserVm;
+import org.rabie.hunters_league.web.vm.response.UserResponseVm;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,10 +31,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserVm> login(@RequestBody LoginVM loginVM) {
+    public ResponseEntity<UserResponseVm> login( @RequestBody LoginVM loginVM) {
         User user = userMapper.toUserFromLoginVm(loginVM);
         User savedUser = userService.login(user);
-        return ResponseEntity.ok(userMapper.toUserVm(savedUser));
+        return ResponseEntity.ok(userMapper.toUserResponseVm(savedUser));
     }
 
 
