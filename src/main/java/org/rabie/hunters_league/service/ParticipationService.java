@@ -1,0 +1,20 @@
+package org.rabie.hunters_league.service;
+
+import org.rabie.hunters_league.domain.Participation;
+import org.rabie.hunters_league.repository.ParticipationRepository;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ParticipationService {
+    private final ParticipationRepository participationRepository;
+
+    public ParticipationService(ParticipationRepository participationRepository) {
+        this.participationRepository = participationRepository;
+    }
+
+    public Participation save(Participation participation) {
+        return participationRepository.save(participation);
+    }
+
+
+}

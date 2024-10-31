@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Participation{
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @ManyToOne
