@@ -53,5 +53,10 @@ public class UserService {
         return userRepository.findAll(pageRequest);
     }
 
+    public void delete(User user) {
+        if(user == null) throw new UserNotExistException("User does not exist");
+        userRepository.delete(user);
+    }
+
 }
 

@@ -1,8 +1,12 @@
 package org.rabie.hunters_league.web.api;
 
+import jakarta.validation.Valid;
 import org.rabie.hunters_league.domain.Competition;
 import org.rabie.hunters_league.domain.Participation;
 import org.rabie.hunters_league.domain.User;
+import org.rabie.hunters_league.exceptions.CompetitionNotExistException;
+import org.rabie.hunters_league.exceptions.LicenceUserExpiredException;
+import org.rabie.hunters_league.exceptions.UserNotExistException;
 import org.rabie.hunters_league.service.CompetitionService;
 import org.rabie.hunters_league.service.ParticipationService;
 import org.rabie.hunters_league.service.UserService;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
@@ -28,7 +33,8 @@ public class ParticipationController {
     private final UserService userService;
 
     public ParticipationController(ParticipationService participationService, ParticipationMapper participationMapper, CompetitionService competitionService,
-                                    UserService userService) {
+                                    UserService userService)
+    {
         this.participationService = participationService;
         this.participationMapper = participationMapper;
         this.competitionService = competitionService;
@@ -36,16 +42,14 @@ public class ParticipationController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ParticipationResponseVm> createParticipation(@RequestBody ParticipationVm participationVm) {
+    public ResponseEntity<ParticipationResponseVm> createParticipation(@Valid @RequestBody ParticipationVm participationVm) {
         User user = userService.getById(participationVm.getUserId());
         Competition competition = competitionService.getById(participationVm.getCompetitionId());
-
         Participation participation = new Participation();
         participation.setUser(user);
         participation.setCompetition(competition);
         participation.setScore(participationVm.getScore());
         Participation savedParticipation = participationService.save(participation);
-        ParticipationResponseVm participationResponseVm = participationMapper.toParticipationResponseVm(savedParticipation);
         return ResponseEntity.ok(participationMapper.toParticipationResponseVm(savedParticipation));
     }
 

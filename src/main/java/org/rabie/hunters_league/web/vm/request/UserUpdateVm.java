@@ -1,8 +1,10 @@
 package org.rabie.hunters_league.web.vm.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import org.hibernate.validator.constraints.UniqueElements;
 import org.rabie.hunters_league.domain.enums.Role;
 
@@ -12,31 +14,22 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 public class UserUpdateVm {
-    @NotBlank(message = "Id is required.")
+    @NotNull
     private UUID id;
-
-    @NotBlank(message = "Username is required.")
-    @UniqueElements
+    @NotBlank @NonNull
     private String username;
-
-    @NotBlank(message = "Email is required.")
-    @UniqueElements
+    @NotBlank @NonNull
     private String email;
-
+    @NotNull
     private Role role;
-
-    @NotBlank(message = "First name is required.")
+    @NotBlank @NonNull
     private String firstName;
-
-    @NotBlank(message = "Last name is required.")
+    @NotBlank @NonNull
     private String lastName;
-
-    @NotBlank(message = "CIN is required.")
+    @NotBlank @NonNull
     private String cin;
-
-    @NotBlank(message = "Nationality is required.")
+    @NotBlank @NonNull
     private String nationality;
-
-    @NotBlank(message = "license Expiration Date date is required.")
+    @NotNull
     private LocalDateTime licenseExpirationDate;
 }

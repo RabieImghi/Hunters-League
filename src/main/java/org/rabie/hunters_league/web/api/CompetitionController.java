@@ -1,5 +1,6 @@
 package org.rabie.hunters_league.web.api;
 
+import jakarta.validation.Valid;
 import org.rabie.hunters_league.domain.Competition;
 import org.rabie.hunters_league.service.CompetitionService;
 import org.rabie.hunters_league.web.vm.mapper.CompetitionMapper;
@@ -24,7 +25,7 @@ public class CompetitionController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CompetitionResponseVm> createCompetition(@RequestBody CompetitionVm competitionVm) {
+    public ResponseEntity<CompetitionResponseVm> createCompetition(@Valid @RequestBody CompetitionVm competitionVm) {
         Competition competition = competitionMapper.toCompetition(competitionVm);
         Competition savedCompetition = competitionService.save(competition);
         return ResponseEntity.ok(competitionMapper.toCompetitionResponseVm(savedCompetition));

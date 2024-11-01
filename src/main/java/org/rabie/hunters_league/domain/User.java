@@ -1,5 +1,6 @@
 package org.rabie.hunters_league.domain;
 
+import jakarta.validation.constraints.Pattern;
 import org.rabie.hunters_league.domain.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +15,6 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

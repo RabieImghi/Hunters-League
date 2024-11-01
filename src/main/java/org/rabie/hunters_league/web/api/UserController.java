@@ -1,5 +1,6 @@
 package org.rabie.hunters_league.web.api;
 
+import jakarta.validation.Valid;
 import org.rabie.hunters_league.domain.User;
 import org.rabie.hunters_league.service.UserService;
 import org.rabie.hunters_league.web.vm.mapper.UserMapper;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,20 +27,22 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
-
-
     @GetMapping("/getAll")
-    public Page<ListUserVm> getUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<User> users = userService.getAllUsers(page, size);
+    public Page<ListUserVm> getUsers(@Valid @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "100") int size) {
         return userService.getAllUsers(page, size).map(userMapper::toListUserVm);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<UserResponseVm> updateUser(@RequestBody UserUpdateVm userUpdateVm) {
+    public ResponseEntity<UserResponseVm> updateUser(@Valid @RequestBody UserUpdateVm userUpdateVm) {
         User user = userMapper.toUserFromUpdateVm(userUpdateVm);
         User updatedUser = userService.update(user);
         return ResponseEntity.ok(userMapper.toUserResponseVm(updatedUser));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<UserResponseVm> deleteUser(@PathVariable UUID id) {
+        User user = userService.getById(id);
+        userService.delete(user);
+        return ResponseEntity.ok(userMapper.toUserResponseVm(user));
     }
 }

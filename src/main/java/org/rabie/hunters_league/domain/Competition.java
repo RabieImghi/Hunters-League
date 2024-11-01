@@ -1,5 +1,6 @@
 package org.rabie.hunters_league.domain;
 
+import jakarta.validation.constraints.Pattern;
 import org.rabie.hunters_league.domain.enums.SpeciesType;
 import jakarta.persistence.*;
 import lombok.*;

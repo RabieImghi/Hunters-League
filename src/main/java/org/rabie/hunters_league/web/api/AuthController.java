@@ -1,5 +1,6 @@
 package org.rabie.hunters_league.web.api;
 
+import jakarta.validation.Valid;
 import org.rabie.hunters_league.domain.User;
 import org.rabie.hunters_league.service.UserService;
 import org.rabie.hunters_league.web.vm.mapper.UserMapper;
@@ -24,14 +25,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserVm> register(@RequestBody UserVm userVm) {
+    public ResponseEntity<UserVm> register(@Valid @RequestBody UserVm userVm) {
         User user = userMapper.toUser(userVm);
         User savedUser = userService.save(user);
         return ResponseEntity.ok(userMapper.toUserVm(savedUser));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseVm> login( @RequestBody LoginVM loginVM) {
+    public ResponseEntity<UserResponseVm> login(@Valid @RequestBody LoginVM loginVM) {
         User user = userMapper.toUserFromLoginVm(loginVM);
         User savedUser = userService.login(user);
         return ResponseEntity.ok(userMapper.toUserResponseVm(savedUser));
