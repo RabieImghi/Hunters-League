@@ -27,6 +27,10 @@ public class HuntService {
     public void deleteBySpeciesId(Species species) {
         if (species == null)
             throw new HuntException("Hunt is null");
-        huntRepository.deleteBySpeciesId(species.getId());
+        int batchSize = 10000;
+        int deletedCount;
+        do {
+            deletedCount = huntRepository.deleteBySpeciesIdBatch(species.getId(), batchSize);
+        } while (deletedCount > 0);
     }
 }

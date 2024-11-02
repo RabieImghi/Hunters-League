@@ -16,7 +16,9 @@ public interface HuntRepository extends JpaRepository<Hunt, UUID> {
     List<Hunt> findBySpecies(Species species);
 
     @Modifying
-    @Query("DELETE FROM Hunt h WHERE h.species.id = :speciesId")
-    void deleteBySpeciesId(@Param("speciesId") UUID speciesId);
+    @Query(value = "DELETE FROM hunt WHERE spId IN (SELECT spId FROM hunt WHERE species_id = :speciesId LIMIT :batchSize)", nativeQuery = true)
+    int deleteBySpeciesIdBatch(@Param("speciesId") UUID speciesId, @Param("batchSize") int batchSize);
+
+
 
 }
