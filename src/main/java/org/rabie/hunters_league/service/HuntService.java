@@ -33,4 +33,14 @@ public class HuntService {
             deletedCount = huntRepository.deleteBySpeciesIdBatch(species.getId(), batchSize);
         } while (deletedCount > 0);
     }
+
+    public Hunt createHunt(Hunt hunt) {
+        if (hunt == null)
+            throw new HuntException("Hunt is null");
+        if (hunt.getSpecies() == null)
+            throw new HuntException("Species is null");
+        if (hunt.getParticipation() == null)
+            throw new HuntException("Participation is null");
+        return huntRepository.save(hunt);
+    }
 }
