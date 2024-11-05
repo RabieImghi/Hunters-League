@@ -20,5 +20,15 @@ public interface HuntRepository extends JpaRepository<Hunt, UUID> {
     int deleteBySpeciesIdBatch(@Param("speciesId") UUID speciesId, @Param("batchSize") int batchSize);
 
 
+    @Query(value = "SELECT * FROM hunt WHERE participation_id = :participationId LIMIT :limit OFFSET :offset", nativeQuery = true)
+    List<Hunt> findByParticipationIdWithLimit(
+            @Param("participationId") UUID participationId,
+            @Param("offset") long offset,
+            @Param("limit") int limit
+    );
+
+
+    @Query(value = "SELECT COUNT(*) FROM hunt WHERE participation_id = :participationId", nativeQuery = true)
+    long countByParticipationId(@Param("participationId") UUID participationId);
 
 }

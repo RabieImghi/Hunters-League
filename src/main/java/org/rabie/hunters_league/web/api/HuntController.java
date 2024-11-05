@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import org.rabie.hunters_league.domain.Hunt;
 import org.rabie.hunters_league.domain.Participation;
 import org.rabie.hunters_league.domain.Species;
+import org.rabie.hunters_league.exceptions.HuntException;
+import org.rabie.hunters_league.exceptions.SpeciesException;
 import org.rabie.hunters_league.service.HuntService;
 import org.rabie.hunters_league.service.ParticipationService;
 import org.rabie.hunters_league.service.SpeciesService;

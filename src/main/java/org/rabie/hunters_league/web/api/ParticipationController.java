@@ -8,6 +8,7 @@ import org.rabie.hunters_league.exceptions.CompetitionNotExistException;
 import org.rabie.hunters_league.exceptions.LicenceUserExpiredException;
 import org.rabie.hunters_league.exceptions.UserNotExistException;
 import org.rabie.hunters_league.service.CompetitionService;
+import org.rabie.hunters_league.service.HuntService;
 import org.rabie.hunters_league.service.ParticipationService;
 import org.rabie.hunters_league.service.UserService;
 import org.rabie.hunters_league.web.vm.mapper.ParticipationMapper;
@@ -30,15 +31,17 @@ public class ParticipationController {
     private final ParticipationService participationService;
     private final ParticipationMapper participationMapper;
     private final CompetitionService competitionService;
+    private final HuntService huntService;
     private final UserService userService;
 
     public ParticipationController(ParticipationService participationService, ParticipationMapper participationMapper, CompetitionService competitionService,
-                                    UserService userService)
+                                    UserService userService, HuntService huntService)
     {
         this.participationService = participationService;
         this.participationMapper = participationMapper;
         this.competitionService = competitionService;
         this.userService = userService;
+        this.huntService = huntService;
     }
 
     @GetMapping("/list")
@@ -61,8 +64,7 @@ public class ParticipationController {
     @GetMapping("/calculateScore/{id}")
     public ResponseEntity<ParticipationScoreResponseVm> calculateScore(@PathVariable UUID id) {
         Participation participation = participationService.getById(id);
-        //participationService.calculateScore(participation);
-        participationService.calculateScoreAllParticipation();
+        participationService.calculateScore(participation);
         return ResponseEntity.ok(participationMapper.toParticipationScoreResponseVm(participation));
     }
 

@@ -21,9 +21,11 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 public class ParticipationService {
     private final ParticipationRepository participationRepository;
+    private final HuntService huntService;
 
-    public ParticipationService(ParticipationRepository participationRepository) {
+    public ParticipationService(ParticipationRepository participationRepository, HuntService huntService) {
         this.participationRepository = participationRepository;
+        this.huntService = huntService;
     }
 
     public Page<Participation> getAll(int page, int size) {
@@ -50,9 +52,9 @@ public class ParticipationService {
         return participationRepository.save(participation);
     }
 
+
     public double calculateScore(Participation participation) {
         List<Hunt> hunts = participation.getHunts();
-        Competition competition = participation.getCompetition();
         AtomicReference<Double> score = new AtomicReference<>(0.);
         hunts.forEach(hunt -> {
             Species species = hunt.getSpecies();
