@@ -5,7 +5,6 @@ import org.rabie.hunters_league.domain.User;
 import org.rabie.hunters_league.service.UserService;
 import org.rabie.hunters_league.web.vm.mapper.UserMapper;
 import org.rabie.hunters_league.web.vm.request.UserUpdateVm;
-import org.rabie.hunters_league.web.vm.response.ListUserVm;
 import org.rabie.hunters_league.web.vm.response.UserResponseVm;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +27,8 @@ public class UserController {
     }
 
     @GetMapping("/getAll")
-    public Page<ListUserVm> getUsers(@Valid @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "100") int size) {
-        return userService.getAllUsers(page, size).map(userMapper::toListUserVm);
+    public Page<UserResponseVm> getUsers(@Valid @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "100") int size) {
+        return userService.getAllUsers(page, size).map(userMapper::toUserResponseVm);
     }
 
     @PutMapping("/update")

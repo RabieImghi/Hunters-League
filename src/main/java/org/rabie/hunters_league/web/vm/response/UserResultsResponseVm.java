@@ -4,10 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.rabie.hunters_league.domain.User;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class UserResultsResponseVm {
-    private ListUserVm user;
-    private CompetitionResponseVm competition;
-    private Double score;
+    private UserResponseVm user;
+    private List<CompetitionResults> competitions;
 }

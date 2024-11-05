@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import org.rabie.hunters_league.domain.User;
 import org.rabie.hunters_league.service.UserService;
 import org.rabie.hunters_league.web.vm.mapper.UserMapper;
+import org.rabie.hunters_league.web.vm.request.CreatNewUserVm;
 import org.rabie.hunters_league.web.vm.request.LoginVM;
-import org.rabie.hunters_league.web.vm.request.UserVm;
 import org.rabie.hunters_league.web.vm.response.UserResponseVm;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,8 +25,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserVm> register(@Valid @RequestBody UserVm userVm) {
-        User user = userMapper.toUser(userVm);
+    public ResponseEntity<CreatNewUserVm> register(@Valid @RequestBody CreatNewUserVm creatNewUserVm) {
+        User user = userMapper.toUser(creatNewUserVm);
         User savedUser = userService.save(user);
         return ResponseEntity.ok(userMapper.toUserVm(savedUser));
     }

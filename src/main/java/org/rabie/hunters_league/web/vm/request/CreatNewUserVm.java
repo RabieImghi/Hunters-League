@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class UserVm {
+public class CreatNewUserVm {
     @NotBlank @NonNull
     private String username;
     @NotBlank @NonNull

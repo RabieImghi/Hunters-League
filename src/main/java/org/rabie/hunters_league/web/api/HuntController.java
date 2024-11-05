@@ -4,13 +4,11 @@ import jakarta.validation.Valid;
 import org.rabie.hunters_league.domain.Hunt;
 import org.rabie.hunters_league.domain.Participation;
 import org.rabie.hunters_league.domain.Species;
-import org.rabie.hunters_league.exceptions.HuntException;
-import org.rabie.hunters_league.exceptions.SpeciesException;
 import org.rabie.hunters_league.service.HuntService;
 import org.rabie.hunters_league.service.ParticipationService;
 import org.rabie.hunters_league.service.SpeciesService;
 import org.rabie.hunters_league.web.vm.mapper.HuntMapper;
-import org.rabie.hunters_league.web.vm.request.HuntRequestVm;
+import org.rabie.hunters_league.web.vm.request.CreateHuntVm;
 import org.rabie.hunters_league.web.vm.response.HuntResponseVm;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,13 +33,13 @@ public class HuntController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<HuntResponseVm> createHunt(@Valid @RequestBody HuntRequestVm huntRequestVm){
-        Species species = speciesService.getById(huntRequestVm.getSpeciesId());
-        Participation participation = participationService.getById(huntRequestVm.getParticipationId());
+    public ResponseEntity<HuntResponseVm> createHunt(@Valid @RequestBody CreateHuntVm createHuntVm){
+        Species species = speciesService.getById(createHuntVm.getSpeciesId());
+        Participation participation = participationService.getById(createHuntVm.getParticipationId());
         Hunt hunt = new Hunt();
         hunt.setSpecies(species);
         hunt.setParticipation(participation);
-        hunt.setWeight(huntRequestVm.getWeight());
+        hunt.setWeight(createHuntVm.getWeight());
         Hunt createdHunt = huntService.createHunt(hunt);
         HuntResponseVm huntResponseVm = huntMapper.toHuntResponseVm(createdHunt);
         return ResponseEntity.ok(huntResponseVm);

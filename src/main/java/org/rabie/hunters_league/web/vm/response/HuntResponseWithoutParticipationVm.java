@@ -8,9 +8,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class HuntResponseVm {
+public class HuntResponseWithoutParticipationVm {
     private UUID id;
     private Species species;
     private Double weight;
-    private ParticipationResponseVm participation;
 }

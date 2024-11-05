@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class UserResultsVm {
+public class RequestForGetUserCompetitionResultVm {
     private UUID userId;
     private UUID competitionId;
 }

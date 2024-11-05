@@ -1,18 +1,16 @@
 package org.rabie.hunters_league.web.api;
 
 import jakarta.validation.Valid;
-import org.rabie.hunters_league.domain.Hunt;
 import org.rabie.hunters_league.domain.Species;
 import org.rabie.hunters_league.service.HuntService;
 import org.rabie.hunters_league.service.SpeciesService;
 import org.rabie.hunters_league.web.vm.mapper.SpeciesMapper;
-import org.rabie.hunters_league.web.vm.request.SpeciesCreateVm;
+import org.rabie.hunters_league.web.vm.request.CreateSpeciesVm;
 import org.rabie.hunters_league.web.vm.response.SpecieResponseVm;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -34,8 +32,8 @@ public class SpeciesController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<SpecieResponseVm> create(@Valid @RequestBody SpeciesCreateVm speciesCreateVm) {
-        Species species = speciesService.save(speciesMapper.toSpeciesFromCreate(speciesCreateVm));
+    public ResponseEntity<SpecieResponseVm> create(@Valid @RequestBody CreateSpeciesVm createSpeciesVm) {
+        Species species = speciesService.save(speciesMapper.toSpeciesFromCreate(createSpeciesVm));
         return ResponseEntity.ok(speciesMapper.toListSpeciesVm(species));
     }
 

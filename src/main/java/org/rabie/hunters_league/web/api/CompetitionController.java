@@ -2,20 +2,17 @@ package org.rabie.hunters_league.web.api;
 
 import jakarta.validation.Valid;
 import org.rabie.hunters_league.domain.Competition;
-import org.rabie.hunters_league.domain.Participation;
 import org.rabie.hunters_league.service.CompetitionService;
 import org.rabie.hunters_league.service.ParticipationService;
 import org.rabie.hunters_league.web.vm.mapper.CompetitionMapper;
-import org.rabie.hunters_league.web.vm.request.CompetitionVm;
+import org.rabie.hunters_league.web.vm.request.CreateCompetitionVm;
 import org.rabie.hunters_league.web.vm.response.CompetitionResponseVm;
-import org.rabie.hunters_league.web.vm.response.UserResultsResponseVm;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/competition")
@@ -32,8 +29,8 @@ public class CompetitionController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CompetitionResponseVm> createCompetition(@Valid @RequestBody CompetitionVm competitionVm) {
-        Competition competition = competitionMapper.toCompetition(competitionVm);
+    public ResponseEntity<CompetitionResponseVm> createCompetition(@Valid @RequestBody CreateCompetitionVm createCompetitionVm) {
+        Competition competition = competitionMapper.toCompetition(createCompetitionVm);
         Competition savedCompetition = competitionService.save(competition);
         return ResponseEntity.ok(competitionMapper.toCompetitionResponseVm(savedCompetition));
     }

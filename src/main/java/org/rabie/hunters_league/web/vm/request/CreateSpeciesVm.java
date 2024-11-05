@@ -8,7 +8,7 @@ import org.rabie.hunters_league.domain.enums.SpeciesType;
 
 @Getter
 @Setter
-public class SpeciesCreateVm {
+public class CreateSpeciesVm {
     @NotBlank @NonNull
     private String name;
     @NotNull
