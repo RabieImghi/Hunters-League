@@ -24,4 +24,8 @@ public interface ParticipationRepository extends JpaRepository<Participation, UU
     List<Participation> findAllWithLimit(@Param("offset") long offset, @Param("limit") int limit);
 
     Page<Participation> findByUserId(UUID userId, PageRequest pageRequest);
+
+    @Query("SELECT p FROM Participation p ORDER BY p.score DESC")
+    Page<Participation> getTop3ParticipationOrderByScoreDesc(PageRequest pageRequest);
+
 }

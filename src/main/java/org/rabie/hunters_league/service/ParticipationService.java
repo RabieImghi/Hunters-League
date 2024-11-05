@@ -53,8 +53,11 @@ public class ParticipationService {
     }
 
     public Page<Participation> findByUserId(UUID userId, int page, int size) {
-
         return participationRepository.findByUserId(userId,PageRequest.of(page, size));
+    }
+
+    public Page<Participation> getTop3ParticipationOrderByScoreDesc() {
+        return participationRepository.getTop3ParticipationOrderByScoreDesc(PageRequest.of(0,3));
     }
 
     public double calculateScore(Participation participation) {

@@ -77,6 +77,12 @@ public class ParticipationController {
         return participation.map(participationMapper::toUserResultsResponseVm);
     }
 
+    @GetMapping("/getTop3")
+    public Page<UserResultsResponseVm> getTop3() {
+        Page<Participation> participation = participationService.getTop3ParticipationOrderByScoreDesc();
+        return participation.map(participationMapper::toUserResultsResponseVm);
+    }
+
 
 
 }
