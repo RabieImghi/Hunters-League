@@ -28,4 +28,17 @@ public interface ParticipationRepository extends JpaRepository<Participation, UU
     @Query("SELECT p FROM Participation p ORDER BY p.score DESC")
     Page<Participation> getTop3ParticipationOrderByScoreDesc(PageRequest pageRequest);
 
+
+    @Query(value = """
+            WITH RankedParticipations AS (
+                SELECT user_id, RANK() OVER (ORDER BY score DESC) AS rank
+                FROM participation
+                WHERE competition_id = :competitionId
+            )
+            SELECT rank
+            FROM RankedParticipations
+            WHERE user_id = :userId
+            """, nativeQuery = true)
+    Integer getUserRank(@Param("competitionId") UUID competitionId, @Param("userId") UUID userId);
+
 }

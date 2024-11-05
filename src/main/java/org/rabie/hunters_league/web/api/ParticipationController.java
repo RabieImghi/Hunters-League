@@ -97,6 +97,25 @@ public class ParticipationController {
 
     }
 
+    @GetMapping("/getMyHistoric/{userId}")
+    public UserHistoricResponseVm getMyHistoric(@PathVariable UUID userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        List<Participation> participationList = participationService.findByUserId(userId,page,size).toList();
+        UserHistoricResponseVm userHVM = new UserHistoricResponseVm();
+        if(participationList.size()==0) throw new HuntException("No part");
+        userHVM.setUser(userMapper.toUserResponseVm(participationList.get(0).getUser()));
+        List<PastCompetitionsResponseVm> pastCompetitionsResponseVmList = new ArrayList<>();
+        participationList.forEach(part ->{
+            PastCompetitionsResponseVm pastCompetitionsResponseVm = new PastCompetitionsResponseVm();
+            pastCompetitionsResponseVm.setId(part.getCompetition().getId());
+            pastCompetitionsResponseVm.setCode(part.getCompetition().getCode());
+            pastCompetitionsResponseVm.setSpeciesType(part.getCompetition().getSpeciesType());
+            pastCompetitionsResponseVm.setRank(participationService.getUserRank(part.getCompetition().getId(),part.getUser().getId()));
+            pastCompetitionsResponseVm.setScore(part.getScore());
+            pastCompetitionsResponseVmList.add(pastCompetitionsResponseVm);
+        });
+        userHVM.setPastCompetitions(pastCompetitionsResponseVmList);
+        return userHVM;
+    }
     @GetMapping("/getTop3")
     public Page<UserResultsResponseVm> getTop3() {
         Page<Participation> participation = participationService.getTop3ParticipationOrderByScoreDesc();

@@ -59,6 +59,9 @@ public class ParticipationService {
     public Page<Participation> getTop3ParticipationOrderByScoreDesc() {
         return participationRepository.getTop3ParticipationOrderByScoreDesc(PageRequest.of(0,3));
     }
+    public Integer getUserRank(UUID competitionId, UUID userId) {
+        return participationRepository.getUserRank(competitionId, userId);
+    }
 
     public double calculateScore(Participation participation) {
         List<Hunt> hunts = participation.getHunts();
