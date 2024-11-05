@@ -34,4 +34,6 @@ public class CompetitionService {
         PageRequest pageRequest = PageRequest.of(page,size);
         return competitionRepository.findAll(pageRequest);
     }
+
+
 }

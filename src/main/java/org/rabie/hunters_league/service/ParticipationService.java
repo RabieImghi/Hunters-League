@@ -52,6 +52,10 @@ public class ParticipationService {
         return participationRepository.save(participation);
     }
 
+    public Page<Participation> findByUserId(UUID userId, int page, int size) {
+
+        return participationRepository.findByUserId(userId,PageRequest.of(page, size));
+    }
 
     public double calculateScore(Participation participation) {
         List<Hunt> hunts = participation.getHunts();

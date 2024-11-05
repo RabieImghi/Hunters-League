@@ -15,9 +15,11 @@ import org.rabie.hunters_league.web.vm.mapper.ParticipationMapper;
 import org.rabie.hunters_league.web.vm.request.ParticipationVm;
 import org.rabie.hunters_league.web.vm.response.ParticipationResponseVm;
 import org.rabie.hunters_league.web.vm.response.ParticipationScoreResponseVm;
+import org.rabie.hunters_league.web.vm.response.UserResultsResponseVm;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -66,6 +68,13 @@ public class ParticipationController {
         Participation participation = participationService.getById(id);
         participationService.calculateScore(participation);
         return ResponseEntity.ok(participationMapper.toParticipationScoreResponseVm(participation));
+    }
+
+
+    @GetMapping("/getMyResult/{userId}")
+    public Page<UserResultsResponseVm> deleteCompetition(@PathVariable UUID userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "100") int size) {
+        Page<Participation> participation = participationService.findByUserId(userId, page, size);
+        return participation.map(participationMapper::toUserResultsResponseVm);
     }
 
 

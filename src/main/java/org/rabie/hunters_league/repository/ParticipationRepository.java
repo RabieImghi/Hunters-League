@@ -3,10 +3,13 @@ package org.rabie.hunters_league.repository;
 import org.rabie.hunters_league.domain.Competition;
 import org.rabie.hunters_league.domain.Participation;
 import org.rabie.hunters_league.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,4 +23,5 @@ public interface ParticipationRepository extends JpaRepository<Participation, UU
     @Query(value = "SELECT * FROM participation WHERE score = 0 LIMIT :limit OFFSET :offset", nativeQuery = true)
     List<Participation> findAllWithLimit(@Param("offset") long offset, @Param("limit") int limit);
 
+    Page<Participation> findByUserId(UUID userId, PageRequest pageRequest);
 }
