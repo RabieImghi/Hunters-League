@@ -26,3 +26,6 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
       #- org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  task:
+    scheduling:
+      enabled: true

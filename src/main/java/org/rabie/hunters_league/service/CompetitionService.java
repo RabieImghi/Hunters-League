@@ -5,6 +5,7 @@ import org.rabie.hunters_league.exceptions.CompetitionException;
 import org.rabie.hunters_league.repository.CompetitionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,6 +34,22 @@ public class CompetitionService {
     public Page<Competition> findAll(int page, int size){
         PageRequest pageRequest = PageRequest.of(page,size);
         return competitionRepository.findAll(pageRequest);
+    }
+
+    @Scheduled(fixedRate = 86400000)
+    public void closeRegistrationsAutomatic(){
+        int batchSize = 1000;
+        int total = (int) competitionRepository.count();
+        for (long offset = 0; offset < total; offset += batchSize){
+            List<Competition> competitionList = competitionRepository.findAllWithLimit(offset,batchSize);
+            competitionList.forEach(competition -> {
+                LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+                if(competition.getDate().isBefore(tomorrow)){
+                    competition.setOpenRegistration(false);
+                    competitionRepository.save(competition);
+                }
+            });
+        }
     }
 
 
