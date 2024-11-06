@@ -72,8 +72,8 @@ public class ParticipationController {
 
     @GetMapping("/getMyResult/{userId}")
     public UserResultsResponseVm deleteCompetition(@PathVariable UUID userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        List<Participation> participation = participationService.findByUserId(userId, page, size).toList();
-        if(participation.size()!=0) {
+        List<Participation> participation = participationService.findByUserId(userId, page, size);
+        if(!participation.isEmpty()) {
             UserResultsResponseVm userResultsResponseVm = new UserResultsResponseVm();
             userResultsResponseVm.setUser(userMapper.toUserResponseVm(participation.get(0).getUser()));
             List<CompetitionResults> competitionResultsList = new ArrayList<>();
@@ -99,9 +99,9 @@ public class ParticipationController {
 
     @GetMapping("/getMyHistoric/{userId}")
     public UserHistoricResponseVm getMyHistoric(@PathVariable UUID userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        List<Participation> participationList = participationService.findByUserId(userId,page,size).toList();
+        List<Participation> participationList = participationService.findByUserId(userId,page,size);
         UserHistoricResponseVm userHVM = new UserHistoricResponseVm();
-        if(participationList.size()==0) throw new HuntException("No part");
+        if(participationList.isEmpty()) throw new HuntException("No part");
         userHVM.setUser(userMapper.toUserResponseVm(participationList.get(0).getUser()));
         List<PastCompetitionsResponseVm> pastCompetitionsResponseVmList = new ArrayList<>();
         participationList.forEach(part ->{
@@ -117,9 +117,9 @@ public class ParticipationController {
         return userHVM;
     }
     @GetMapping("/getTop3")
-    public Page<UserResultsResponseVm> getTop3() {
-        Page<Participation> participation = participationService.getTop3ParticipationOrderByScoreDesc();
-        return participation.map(participationMapper::toUserResultsResponseVm);
+    public List<UserResultsResponseVm> getTop3() {
+        List<Participation> participation = participationService.getTop3ParticipationOrderByScoreDesc();
+        return participation.stream().map(participationMapper::toUserResultsResponseVm).toList();
     }
 
 

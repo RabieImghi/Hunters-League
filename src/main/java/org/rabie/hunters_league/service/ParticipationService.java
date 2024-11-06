@@ -52,11 +52,11 @@ public class ParticipationService {
         return participationRepository.save(participation);
     }
 
-    public Page<Participation> findByUserId(UUID userId, int page, int size) {
+    public List<Participation> findByUserId(UUID userId, int page, int size) {
         return participationRepository.findByUserId(userId,PageRequest.of(page, size));
     }
 
-    public Page<Participation> getTop3ParticipationOrderByScoreDesc() {
+    public List<Participation> getTop3ParticipationOrderByScoreDesc() {
         return participationRepository.getTop3ParticipationOrderByScoreDesc(PageRequest.of(0,3));
     }
     public Integer getUserRank(UUID competitionId, UUID userId) {
