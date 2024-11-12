@@ -2,6 +2,7 @@ package org.rabie.hunters_league.service;
 
 import org.antlr.v4.runtime.tree.pattern.ParseTreePattern;
 import org.rabie.hunters_league.domain.User;
+import org.rabie.hunters_league.exceptions.UserAlreadyExistsException;
 import org.rabie.hunters_league.exceptions.UserPasswordWrongException;
 import org.rabie.hunters_league.exceptions.UserNotExistException;
 import org.rabie.hunters_league.repository.UserRepository;
@@ -33,13 +34,15 @@ public class UserService {
         return userRepository.findById(id).orElse(new User());
     }
     public User save(User user) {
-        UserSearchDto searchDto = new UserSearchDto();
-        searchDto.setEmail(user.getEmail());
-        searchDto.setUsername(user.getUsername());
-        if(userRepository.findOne(UserSpecification.getUsersByCriteria(searchDto)).isPresent())
-            throw new UserNotExistException("User with email: " + user.getEmail() + " already exist");
-        if(userRepository.findOne(UserSpecification.getUsersByCriteria(searchDto)).isPresent())
-            throw new UserNotExistException("User with username: " + user.getUsername() + " already exist");
+        if(user == null) throw new UserNotExistException("User does not exist");
+        UserSearchDto searchDtoByUsername = new UserSearchDto();
+        UserSearchDto searchDtoByEmail = new UserSearchDto();
+        searchDtoByEmail.setEmail(user.getEmail());
+        searchDtoByUsername.setUsername(user.getUsername());
+        if(userRepository.findOne(UserSpecification.getUsersByCriteria(searchDtoByEmail)).isPresent())
+            throw new UserAlreadyExistsException("User with email : " + user.getEmail() + " already exist");
+        if(userRepository.findOne(UserSpecification.getUsersByCriteria(searchDtoByUsername)).isPresent())
+            throw new UserAlreadyExistsException("User with username : " + user.getUsername() + " already exist");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
