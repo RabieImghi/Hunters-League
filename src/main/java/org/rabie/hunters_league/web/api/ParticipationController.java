@@ -65,7 +65,8 @@ public class ParticipationController {
     @GetMapping("/calculateScore/{id}")
     public ResponseEntity<ParticipationResponseVm> calculateScore(@PathVariable UUID id) {
         Participation participation = participationService.getById(id);
-        participationService.calculateScore(participation);
+        //participationService.calculateScore(participation);
+        participationService.calculateScoresForAllParticipation();
         return ResponseEntity.ok(participationMapper.toParticipationResponseVm(participation));
     }
 

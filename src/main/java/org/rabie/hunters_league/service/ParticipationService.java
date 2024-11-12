@@ -9,6 +9,9 @@ import org.rabie.hunters_league.exceptions.CompetitionException;
 import org.rabie.hunters_league.exceptions.LicenceUserExpiredException;
 import org.rabie.hunters_league.exceptions.UserNotExistException;
 import org.rabie.hunters_league.repository.ParticipationRepository;
+import org.rabie.hunters_league.repository.dto.HuntDTO;
+import org.rabie.hunters_league.repository.dto.ParticipationDTO;
+import org.rabie.hunters_league.repository.dto.mapper.ParticipationRepositoryMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -22,10 +25,12 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ParticipationService {
     private final ParticipationRepository participationRepository;
     private final HuntService huntService;
+    private final ParticipationRepositoryMapper participationRepositoryMapper;
 
-    public ParticipationService(ParticipationRepository participationRepository, HuntService huntService) {
+    public ParticipationService(ParticipationRepository participationRepository, HuntService huntService,ParticipationRepositoryMapper participationRepositoryMapper) {
         this.participationRepository = participationRepository;
         this.huntService = huntService;
+        this.participationRepositoryMapper = participationRepositoryMapper;
     }
 
     public Page<Participation> getAll(int page, int size) {
@@ -80,7 +85,7 @@ public class ParticipationService {
     }
 
 
-    public void calculateScoresForAllParticipations() {
+    public void calculateScoresForAllParticipation() {
         int batchSize = 5000;
         long totalParticipations = participationRepository.count();
 
@@ -92,9 +97,10 @@ public class ParticipationService {
                 participation.setScore(score);
             }
 
-            participationRepository.saveAll(participations); // Batch save
+            participationRepository.saveAll(participations);
         }
     }
+
 
 
 

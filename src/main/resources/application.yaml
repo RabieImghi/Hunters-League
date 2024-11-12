@@ -5,11 +5,11 @@ spring:
       file: src/main/docker/compose.yml
       lifecycle-management: start_only
 
-  #datasource:
-  #  driver-class-name: org.postgresql.Driver
-  #  url: jdbc:postgresql://localhost:5432/postgres
-  #  username: root
-  #  password: root
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/samurai
+    username: samurai
+    password: password
 
   jpa:
     properties:
@@ -29,3 +29,6 @@ spring:
   task:
     scheduling:
       enabled: true
+
+  sonar:
+    login: ${SONAR_PASSWORD}

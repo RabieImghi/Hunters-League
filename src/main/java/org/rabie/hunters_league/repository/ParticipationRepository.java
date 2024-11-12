@@ -3,6 +3,7 @@ package org.rabie.hunters_league.repository;
 import org.rabie.hunters_league.domain.Competition;
 import org.rabie.hunters_league.domain.Participation;
 import org.rabie.hunters_league.domain.User;
+import org.rabie.hunters_league.repository.dto.ParticipationDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,8 +22,6 @@ import java.util.UUID;
 public interface ParticipationRepository extends JpaRepository<Participation, UUID> {
     Participation findByUserAndCompetition(User user, Competition competition);
 
-    @Query(value = "SELECT * FROM participation WHERE score = 0 LIMIT :limit OFFSET :offset", nativeQuery = true)
-    List<Participation> findAllWithLimit(@Param("offset") long offset, @Param("limit") int limit);
 
     List<Participation> findByUserId(UUID userId, PageRequest pageRequest);
 
@@ -40,5 +40,12 @@ public interface ParticipationRepository extends JpaRepository<Participation, UU
             WHERE user_id = :userId
             """, nativeQuery = true)
     Integer getUserRank(@Param("competitionId") UUID competitionId, @Param("userId") UUID userId);
+
+
+    @Query("SELECT new org.rabie.hunters_league.repository.dto.ParticipationDTO(p.id, p.score) FROM Participation p")
+    List<ParticipationDTO> findAllParticipationDto(PageRequest pageRequest);
+
+    @Query(value = "SELECT * FROM participation WHERE score = 0 LIMIT :limit OFFSET :offset", nativeQuery = true)
+    List<Participation> findAllWithLimit(@Param("offset") long offset, @Param("limit") int limit);
 
 }

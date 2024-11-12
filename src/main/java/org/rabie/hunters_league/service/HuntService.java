@@ -5,6 +5,7 @@ import org.rabie.hunters_league.domain.Participation;
 import org.rabie.hunters_league.domain.Species;
 import org.rabie.hunters_league.exceptions.HuntException;
 import org.rabie.hunters_league.repository.HuntRepository;
+import org.rabie.hunters_league.repository.dto.HuntDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +52,10 @@ public class HuntService {
         if(hunt.getWeight() < hunt.getSpecies().getMinimumWeight())
             throw new HuntException("Weight is less than minimum weight");
         return huntRepository.save(hunt);
+    }
+
+    public List<HuntDTO> getAllHuntDTOByParticipationId(UUID participationId){
+        return huntRepository.getHuntByParticipationId(participationId);
     }
 
 }
