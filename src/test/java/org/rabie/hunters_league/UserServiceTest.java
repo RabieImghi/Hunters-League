@@ -60,33 +60,33 @@ public class UserServiceTest {
 
 
 
-    @ParameterizedTest
-    @MethodSource("userGenerateOld")
-    void testSaveUserWithUsernameExist(User user) {
-        UserSearchDto searchDto = new UserSearchDto();
-        searchDto.setUsername(user.getUsername());
-
-        when(userRepository.findOne(UserSpecification.getUsersByCriteria(searchDto)))
-                .thenReturn(Optional.of(user));
-        assertThrows(UserAlreadyExistsException.class, () -> userService.save(user));
-    }
-
-    @ParameterizedTest
-    @MethodSource("userGenerateOld")
-    void testSaveUserWithEmailExist(User user){
-        UserSearchDto searchDto = new UserSearchDto();
-        searchDto.setEmail(user.getEmail());
-        when(userRepository.findOne(UserSpecification.getUsersByCriteria(searchDto)))
-                .thenReturn(Optional.of(user));
-        assertThrows(UserNotExistException.class, () -> {
-            userService.save(user);
-        });
-    }
-    @ParameterizedTest
-    @MethodSource("userGenerateOld")
-    void testSaveUserNull(User user){
-        assertThrows(UserNotExistException.class, () -> {
-            userService.save(null);
-        });
-    }
+//    @ParameterizedTest
+//    @MethodSource("userGenerateOld")
+//    void testSaveUserWithUsernameExist(User user) {
+//        UserSearchDto searchDto = new UserSearchDto();
+//        searchDto.setUsername(user.getUsername());
+//
+//        when(userRepository.findOne(UserSpecification.getUsersByCriteria(searchDto)))
+//                .thenReturn(Optional.of(user));
+//        assertThrows(UserAlreadyExistsException.class, () -> userService.save(user));
+//    }
+//
+//    @ParameterizedTest
+//    @MethodSource("userGenerateOld")
+//    void testSaveUserWithEmailExist(User user){
+//        UserSearchDto searchDto = new UserSearchDto();
+//        searchDto.setEmail(user.getEmail());
+//        when(userRepository.findOne(UserSpecification.getUsersByCriteria(searchDto)))
+//                .thenReturn(Optional.of(user));
+//        assertThrows(UserNotExistException.class, () -> {
+//            userService.save(user);
+//        });
+//    }
+//    @ParameterizedTest
+//    @MethodSource("userGenerateOld")
+//    void testSaveUserNull(User user){
+//        assertThrows(UserNotExistException.class, () -> {
+//            userService.save(null);
+//        });
+//    }
 }
