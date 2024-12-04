@@ -11,6 +11,7 @@ import org.rabie.hunters_league.web.vm.mapper.HuntMapper;
 import org.rabie.hunters_league.web.vm.request.CreateHuntVm;
 import org.rabie.hunters_league.web.vm.response.HuntResponseVm;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,7 @@ public class HuntController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('JURY')")
     public ResponseEntity<HuntResponseVm> createHunt(@Valid @RequestBody CreateHuntVm createHuntVm){
         Species species = speciesService.getById(createHuntVm.getSpeciesId());
         Participation participation = participationService.getById(createHuntVm.getParticipationId());

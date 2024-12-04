@@ -16,6 +16,7 @@ import org.rabie.hunters_league.web.vm.request.CreateParticipationVm;
 import org.rabie.hunters_league.web.vm.response.*;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class ParticipationController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('CAN_PARTICIPATE')")
     public ResponseEntity<ParticipationResponseVm> createParticipation(@Valid @RequestBody CreateParticipationVm createParticipationVm) {
         AppUser appUser = userService.getById(createParticipationVm.getUserId());
         Competition competition = competitionService.getById(createParticipationVm.getCompetitionId());
@@ -63,6 +65,7 @@ public class ParticipationController {
     }
 
     @GetMapping("/calculateScore/{id}")
+    @PreAuthorize("hasAuthority('CAN_SCORE')")
     public ResponseEntity<ParticipationResponseVm> calculateScore(@PathVariable UUID id) {
         Participation participation = participationService.getById(id);
         //participationService.calculateScore(participation);
@@ -72,6 +75,7 @@ public class ParticipationController {
 
 
     @GetMapping("/getMyResult/{userId}")
+    @PreAuthorize("hasAuthority('CAN_VIEW_RANKINGS')")
     public UserResultsResponseVm deleteCompetition(@PathVariable UUID userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         List<Participation> participation = participationService.findByUserId(userId, page, size);
         if(!participation.isEmpty()) {
@@ -99,6 +103,7 @@ public class ParticipationController {
     }
 
     @GetMapping("/getMyHistoric/{userId}")
+    @PreAuthorize("hasRole('MEMBER') OR hasRole('JURY') OR hasRole('ADMIN')")
     public UserHistoricResponseVm getMyHistoric(@PathVariable UUID userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         List<Participation> participationList = participationService.findByUserId(userId,page,size);
         UserHistoricResponseVm userHVM = new UserHistoricResponseVm();
@@ -118,6 +123,7 @@ public class ParticipationController {
         return userHVM;
     }
     @GetMapping("/getTop3")
+    @PreAuthorize("hasRole('MEMBER') OR hasRole('JURY') OR hasRole('ADMIN')")
     public List<UserResultsResponseVm> getTop3() {
         List<Participation> participation = participationService.getTop3ParticipationOrderByScoreDesc();
         return participation.stream().map(participationMapper::toUserResultsResponseVm).toList();

@@ -56,7 +56,7 @@ public class AppUser implements UserDetails  {
         Set<GrantedAuthority> authorities = role.getPermissions().stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toSet());
-        authorities.add(new SimpleGrantedAuthority(role.name()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_"+role.name()));
         return authorities;
     }
 

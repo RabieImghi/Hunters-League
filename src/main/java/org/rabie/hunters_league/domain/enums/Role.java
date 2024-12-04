@@ -1,10 +1,7 @@
 package org.rabie.hunters_league.domain.enums;
 
-import lombok.Getter;
-
 import java.util.Set;
 
-@Getter
 public enum Role {
     MEMBER(Set.of("CAN_PARTICIPATE", "CAN_VIEW_RANKINGS", "CAN_VIEW_COMPETITIONS")),
     JURY(Set.of("CAN_PARTICIPATE", "CAN_VIEW_RANKINGS", "CAN_VIEW_COMPETITIONS", "CAN_SCORE")),

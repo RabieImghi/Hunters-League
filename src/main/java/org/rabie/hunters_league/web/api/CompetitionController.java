@@ -9,6 +9,7 @@ import org.rabie.hunters_league.web.vm.request.CreateCompetitionVm;
 import org.rabie.hunters_league.web.vm.response.CompetitionResponseVm;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class CompetitionController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('CAN_MANAGE_COMPETITIONS')")
     public ResponseEntity<CompetitionResponseVm> createCompetition(@Valid @RequestBody CreateCompetitionVm createCompetitionVm) {
         Competition competition = competitionMapper.toCompetition(createCompetitionVm);
         Competition savedCompetition = competitionService.save(competition);
@@ -36,11 +38,13 @@ public class CompetitionController {
     }
 
     @GetMapping("/details")
+    @PreAuthorize("hasAuthority('CAN_VIEW_COMPETITIONS')")
     public Page<CompetitionResponseVm> getCompetition(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "50") int size ){
         Page<Competition> competitionList = competitionService.findAll(page, size);
         return competitionList.map(competitionMapper::toCompetitionResponseVm);
     }
     @GetMapping("/details/{id}")
+    @PreAuthorize("hasAuthority('CAN_VIEW_COMPETITIONS')")
     public List<CompetitionResponseVm> getCompetitionById(@PathVariable UUID id){
         Competition competition = competitionService.getById(id);
         CompetitionResponseVm competitionResponseVm = competitionMapper.toCompetitionResponseVm(competition);
