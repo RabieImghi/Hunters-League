@@ -1,7 +1,6 @@
 package org.rabie.hunters_league.service;
 
 import org.rabie.hunters_league.domain.Species;
-import org.rabie.hunters_league.domain.User;
 import org.rabie.hunters_league.exceptions.SpeciesException;
 import org.rabie.hunters_league.repository.SpeciesRepository;
 import org.springframework.data.domain.Page;

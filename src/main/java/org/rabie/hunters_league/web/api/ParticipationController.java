@@ -1,9 +1,9 @@
 package org.rabie.hunters_league.web.api;
 
 import jakarta.validation.Valid;
+import org.rabie.hunters_league.domain.AppUser;
 import org.rabie.hunters_league.domain.Competition;
 import org.rabie.hunters_league.domain.Participation;
-import org.rabie.hunters_league.domain.User;
 import org.rabie.hunters_league.exceptions.HuntException;
 import org.rabie.hunters_league.service.CompetitionService;
 import org.rabie.hunters_league.service.HuntService;
@@ -52,10 +52,10 @@ public class ParticipationController {
 
     @PostMapping("/create")
     public ResponseEntity<ParticipationResponseVm> createParticipation(@Valid @RequestBody CreateParticipationVm createParticipationVm) {
-        User user = userService.getById(createParticipationVm.getUserId());
+        AppUser appUser = userService.getById(createParticipationVm.getUserId());
         Competition competition = competitionService.getById(createParticipationVm.getCompetitionId());
         Participation participation = new Participation();
-        participation.setUser(user);
+        participation.setAppUser(appUser);
         participation.setCompetition(competition);
         participation.setScore(createParticipationVm.getScore());
         Participation savedParticipation = participationService.save(participation);
@@ -76,7 +76,7 @@ public class ParticipationController {
         List<Participation> participation = participationService.findByUserId(userId, page, size);
         if(!participation.isEmpty()) {
             UserResultsResponseVm userResultsResponseVm = new UserResultsResponseVm();
-            userResultsResponseVm.setUser(userMapper.toUserResponseVm(participation.get(0).getUser()));
+            userResultsResponseVm.setUser(userMapper.toUserResponseVm(participation.get(0).getAppUser()));
             List<CompetitionResults> competitionResultsList = new ArrayList<>();
             participation.forEach(part -> {
                     CompetitionResults competitionResults = new CompetitionResults();
@@ -103,14 +103,14 @@ public class ParticipationController {
         List<Participation> participationList = participationService.findByUserId(userId,page,size);
         UserHistoricResponseVm userHVM = new UserHistoricResponseVm();
         if(participationList.isEmpty()) throw new HuntException("No part");
-        userHVM.setUser(userMapper.toUserResponseVm(participationList.get(0).getUser()));
+        userHVM.setUser(userMapper.toUserResponseVm(participationList.get(0).getAppUser()));
         List<PastCompetitionsResponseVm> pastCompetitionsResponseVmList = new ArrayList<>();
         participationList.forEach(part ->{
             PastCompetitionsResponseVm pastCompetitionsResponseVm = new PastCompetitionsResponseVm();
             pastCompetitionsResponseVm.setId(part.getCompetition().getId());
             pastCompetitionsResponseVm.setCode(part.getCompetition().getCode());
             pastCompetitionsResponseVm.setSpeciesType(part.getCompetition().getSpeciesType());
-            pastCompetitionsResponseVm.setRank(participationService.getUserRank(part.getCompetition().getId(),part.getUser().getId()));
+            pastCompetitionsResponseVm.setRank(participationService.getUserRank(part.getCompetition().getId(),part.getAppUser().getId()));
             pastCompetitionsResponseVm.setScore(part.getScore());
             pastCompetitionsResponseVmList.add(pastCompetitionsResponseVm);
         });

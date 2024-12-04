@@ -24,7 +24,6 @@ public class CreatNewUserVm {
     private String lastName;
     @NotBlank @NonNull
     private String cin;
-    @NotNull
     private Role role;
     @NotBlank @NonNull
     private String email;

@@ -1,7 +1,6 @@
 package org.rabie.hunters_league.service;
 
 import lombok.NonNull;
-import org.rabie.hunters_league.domain.Competition;
 import org.rabie.hunters_league.domain.Hunt;
 import org.rabie.hunters_league.domain.Participation;
 import org.rabie.hunters_league.domain.Species;
@@ -9,8 +8,6 @@ import org.rabie.hunters_league.exceptions.CompetitionException;
 import org.rabie.hunters_league.exceptions.LicenceUserExpiredException;
 import org.rabie.hunters_league.exceptions.UserNotExistException;
 import org.rabie.hunters_league.repository.ParticipationRepository;
-import org.rabie.hunters_league.repository.dto.HuntDTO;
-import org.rabie.hunters_league.repository.dto.ParticipationDTO;
 import org.rabie.hunters_league.repository.dto.mapper.ParticipationRepositoryMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,12 +38,12 @@ public class ParticipationService {
                 (new Participation());
     }
     public Participation save(@NonNull Participation participation) {
-        Participation searchParticipation = participationRepository.findByUserAndCompetition(participation.getUser(), participation.getCompetition());
+        Participation searchParticipation = participationRepository.findByAppUserAndCompetition(participation.getAppUser(), participation.getCompetition());
         if(searchParticipation != null)
             throw new CompetitionException("User already registered in this competition");
-        if(!participation.getUser().getLicenseExpirationDate().isAfter(LocalDateTime.now()))
+        if(!participation.getAppUser().getLicenseExpirationDate().isAfter(LocalDateTime.now()))
             throw new LicenceUserExpiredException("User license has expired");
-        if (participation.getUser() == null)
+        if (participation.getAppUser() == null)
             throw new UserNotExistException("User does not exist");
         if(!participation.getCompetition().getOpenRegistration())
             throw new CompetitionException("Competition is closed for registration");
@@ -58,14 +55,14 @@ public class ParticipationService {
     }
 
     public List<Participation> findByUserId(UUID userId, int page, int size) {
-        return participationRepository.findByUserId(userId,PageRequest.of(page, size));
+        return participationRepository.findByAppUserId(userId,PageRequest.of(page, size));
     }
 
     public List<Participation> getTop3ParticipationOrderByScoreDesc() {
         return participationRepository.getTop3ParticipationOrderByScoreDesc(PageRequest.of(0,3));
     }
     public Integer getUserRank(UUID competitionId, UUID userId) {
-        return participationRepository.getUserRank(competitionId, userId);
+        return participationRepository.getAppUserRank(competitionId, userId);
     }
 
     public double calculateScore(Participation participation) {

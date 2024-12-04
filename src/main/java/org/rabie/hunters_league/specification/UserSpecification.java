@@ -1,8 +1,7 @@
 package org.rabie.hunters_league.specification;
 
-import org.rabie.hunters_league.domain.User;
+import org.rabie.hunters_league.domain.AppUser;
 import org.rabie.hunters_league.service.dto.UserSearchDto;
-import org.springframework.data.domain.Sort;
 
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,7 +11,7 @@ import java.util.List;
 
 public class UserSpecification {
 
-    public static Specification<User> getUsersByCriteria(UserSearchDto searchDto) {
+    public static Specification<AppUser> getUsersByCriteria(UserSearchDto searchDto) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 

@@ -11,7 +11,7 @@ import lombok.Setter;
 public class LoginVM {
 
     @NotBlank @NonNull
-    private String email;
+    private String username;
 
 
     @NotBlank @NonNull

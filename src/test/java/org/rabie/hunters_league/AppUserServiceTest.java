@@ -2,30 +2,22 @@ package org.rabie.hunters_league;
 
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.rabie.hunters_league.domain.User;
+import org.rabie.hunters_league.domain.AppUser;
 import org.rabie.hunters_league.domain.enums.Role;
-import org.rabie.hunters_league.exceptions.UserAlreadyExistsException;
-import org.rabie.hunters_league.exceptions.UserNotExistException;
 import org.rabie.hunters_league.repository.UserRepository;
 import org.rabie.hunters_league.service.UserService;
-import org.rabie.hunters_league.service.dto.UserSearchDto;
-import org.rabie.hunters_league.specification.UserSpecification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
 
-public class UserServiceTest {
+public class AppUserServiceTest {
     @Mock
     private UserRepository userRepository;
 
@@ -41,8 +33,8 @@ public class UserServiceTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
     }
-    static Stream<User> userGenerateOld() {
-        User newUser = User.builder()
+    static Stream<AppUser> userGenerateOld() {
+        AppUser newAppUser = AppUser.builder()
                 .username("newUser123")
                 .password("password")
                 .role(Role.MEMBER)
@@ -54,7 +46,7 @@ public class UserServiceTest {
                 .joinDate(LocalDateTime.now())
                 .licenseExpirationDate(LocalDateTime.now().plusYears(1))
                 .build();
-        return Stream.of(newUser);
+        return Stream.of(newAppUser);
     }
 
 

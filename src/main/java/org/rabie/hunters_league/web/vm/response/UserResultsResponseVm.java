@@ -2,7 +2,6 @@ package org.rabie.hunters_league.web.vm.response;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.rabie.hunters_league.domain.User;
 
 import java.util.List;
 
