@@ -47,12 +47,13 @@ public class ParticipationController {
     }
 
     @GetMapping("/list")
+    @PreAuthorize("hasRole('MEMBER')")
     public Page<ParticipationResponseVm> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "100") int size) {
         return participationService.getAll(page, size).map(participationMapper::toParticipationResponseVm);
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasAuthority('CAN_PARTICIPATE')")
+    @PreAuthorize("hasRole('MEMBER')")
     public ResponseEntity<ParticipationResponseVm> createParticipation(@Valid @RequestBody CreateParticipationVm createParticipationVm) {
         AppUser appUser = userService.getById(createParticipationVm.getUserId());
         Competition competition = competitionService.getById(createParticipationVm.getCompetitionId());
@@ -65,17 +66,17 @@ public class ParticipationController {
     }
 
     @GetMapping("/calculateScore/{id}")
-    @PreAuthorize("hasAuthority('CAN_SCORE')")
+    @PreAuthorize("hasRole('JURY')")
     public ResponseEntity<ParticipationResponseVm> calculateScore(@PathVariable UUID id) {
         Participation participation = participationService.getById(id);
-        //participationService.calculateScore(participation);
-        participationService.calculateScoresForAllParticipation();
+        participationService.calculateScore(participation);
+        //participationService.calculateScoresForAllParticipation();
         return ResponseEntity.ok(participationMapper.toParticipationResponseVm(participation));
     }
 
 
     @GetMapping("/getMyResult/{userId}")
-    @PreAuthorize("hasAuthority('CAN_VIEW_RANKINGS')")
+    @PreAuthorize("hasRole('MEMBER')")
     public UserResultsResponseVm deleteCompetition(@PathVariable UUID userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         List<Participation> participation = participationService.findByUserId(userId, page, size);
         if(!participation.isEmpty()) {
@@ -103,7 +104,7 @@ public class ParticipationController {
     }
 
     @GetMapping("/getMyHistoric/{userId}")
-    @PreAuthorize("hasRole('MEMBER') OR hasRole('JURY') OR hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MEMBER')")
     public UserHistoricResponseVm getMyHistoric(@PathVariable UUID userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         List<Participation> participationList = participationService.findByUserId(userId,page,size);
         UserHistoricResponseVm userHVM = new UserHistoricResponseVm();
@@ -123,7 +124,7 @@ public class ParticipationController {
         return userHVM;
     }
     @GetMapping("/getTop3")
-    @PreAuthorize("hasRole('MEMBER') OR hasRole('JURY') OR hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MEMBER')")
     public List<UserResultsResponseVm> getTop3() {
         List<Participation> participation = participationService.getTop3ParticipationOrderByScoreDesc();
         return participation.stream().map(participationMapper::toUserResultsResponseVm).toList();

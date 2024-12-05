@@ -28,13 +28,11 @@ public class UserController {
     }
 
     @PostMapping("/getAll")
-    @PreAuthorize("hasAuthority('CAN_MANAGE_USERS')")
     public Page<UserResponseVm> getUsers(@Valid UserSearchDto userSearchDto, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "100") int size) {
         return userService.searchUsers(userSearchDto,page, size).map(userMapper::toUserResponseVm);
     }
 
     @PutMapping("/update")
-    @PreAuthorize("hasAuthority('CAN_MANAGE_USERS')")
     public ResponseEntity<UserResponseVm> updateUser(@Valid @RequestBody UserUpdateVm userUpdateVm) {
         AppUser appUser = userMapper.toUserFromUpdateVm(userUpdateVm);
         AppUser updatedAppUser = userService.update(appUser);
@@ -42,7 +40,6 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAuthority('CAN_MANAGE_USERS')")
     public ResponseEntity<UserResponseVm> deleteUser(@PathVariable UUID id) {
         AppUser appUser = userService.getById(id);
         userService.delete(appUser);

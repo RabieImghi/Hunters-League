@@ -30,7 +30,7 @@ public class CompetitionController {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasAuthority('CAN_MANAGE_COMPETITIONS')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CompetitionResponseVm> createCompetition(@Valid @RequestBody CreateCompetitionVm createCompetitionVm) {
         Competition competition = competitionMapper.toCompetition(createCompetitionVm);
         Competition savedCompetition = competitionService.save(competition);
@@ -38,13 +38,13 @@ public class CompetitionController {
     }
 
     @GetMapping("/details")
-    @PreAuthorize("hasAuthority('CAN_VIEW_COMPETITIONS')")
+    @PreAuthorize("hasRole('MEMBER')")
     public Page<CompetitionResponseVm> getCompetition(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "50") int size ){
         Page<Competition> competitionList = competitionService.findAll(page, size);
         return competitionList.map(competitionMapper::toCompetitionResponseVm);
     }
     @GetMapping("/details/{id}")
-    @PreAuthorize("hasAuthority('CAN_VIEW_COMPETITIONS')")
+    @PreAuthorize("hasRole('MEMBER')")
     public List<CompetitionResponseVm> getCompetitionById(@PathVariable UUID id){
         Competition competition = competitionService.getById(id);
         CompetitionResponseVm competitionResponseVm = competitionMapper.toCompetitionResponseVm(competition);
