@@ -46,9 +46,6 @@ public class JwtUtil {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        if (userDetails instanceof AppUser) {
-            claims.put("role", ((AppUser) userDetails).getRole().name());
-        }
         return createToken(claims, userDetails.getUsername());
     }
 
