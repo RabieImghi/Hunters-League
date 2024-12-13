@@ -26,6 +26,9 @@ public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken>
 
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
+        String issuer = jwt.getClaimAsString("iss");
+        if (issuer != null || issuer.contains("localhost:8080/realms/Hunters_league"))
+            new JwtAuthenticationToken(jwt, null, null);
         Collection<GrantedAuthority> authorities = Stream.concat(
                 jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
                 extractResourceRoles(jwt).stream()).collect(Collectors.toSet());
@@ -50,6 +53,7 @@ public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken>
                 || (resourceRoles = (Collection<String>) resource.get("roles")) == null) {
             return Set.of();
         }
+
         return resourceRoles.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toSet());
