@@ -7,13 +7,23 @@ server:
     key-store-type: PKCS12
     key-password: rabieimghi
     key-store-password: rabieimghi
-
+jwt:
+  auth:
+    converter:
+      resource-id: Hunters_league_api
+      principal-attribute: preferred_username
 spring:
   docker:
     compose:
       enabled: true
       file: src/main/docker/compose.yml
       lifecycle-management: start_only
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/Hunters_league
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
   #datasource:
   #  driver-class-name: org.postgresql.Driver
