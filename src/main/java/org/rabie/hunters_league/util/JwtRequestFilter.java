@@ -43,7 +43,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }else {
-                    SecurityContextHolder.clearContext();
+                    System.out.println("Invalid token");
                 }
             }
         }

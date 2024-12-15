@@ -32,7 +32,7 @@ public class JwtOAuth2Filter extends OncePerRequestFilter {
                 var authentication = jwtAuthProvider.authenticate(new BearerTokenAuthenticationToken(token));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
-                SecurityContextHolder.clearContext();
+                System.out.println("Error: " + e.getMessage());
             }
         }
         filterChain.doFilter(request, response);
