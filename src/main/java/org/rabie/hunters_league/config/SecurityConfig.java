@@ -54,7 +54,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/user/**")).hasRole("ADMIN")
-                        .requestMatchers(new AntPathRequestMatcher("/api/species/**")).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(delegatingJwtFilter, UsernamePasswordAuthenticationFilter.class)

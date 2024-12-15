@@ -4,6 +4,7 @@ import org.rabie.hunters_league.domain.AppUser;
 import org.rabie.hunters_league.domain.Competition;
 import org.rabie.hunters_league.domain.Participation;
 import org.rabie.hunters_league.repository.dto.ParticipationDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,8 +21,8 @@ public interface ParticipationRepository extends JpaRepository<Participation, UU
 
     List<Participation> findByAppUserId(UUID userId, PageRequest pageRequest);
 
-    @Query("SELECT p FROM Participation p ORDER BY p.score DESC")
-    List<Participation> getTop3ParticipationOrderByScoreDesc(PageRequest pageRequest);
+    @Query("SELECT p FROM Participation p ORDER BY p.score DESC ")
+    Page<Participation> getTop3ParticipationOrderByScoreDesc(PageRequest pageRequest);
 
 
     @Query(value = """

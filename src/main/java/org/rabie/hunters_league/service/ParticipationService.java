@@ -58,7 +58,7 @@ public class ParticipationService {
         return participationRepository.findByAppUserId(userId,PageRequest.of(page, size));
     }
 
-    public List<Participation> getTop3ParticipationOrderByScoreDesc() {
+    public Page<Participation> getTop3ParticipationOrderByScoreDesc() {
         return participationRepository.getTop3ParticipationOrderByScoreDesc(PageRequest.of(0,3));
     }
     public Integer getUserRank(UUID competitionId, UUID userId) {

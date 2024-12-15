@@ -9,6 +9,7 @@ import org.rabie.hunters_league.service.CompetitionService;
 import org.rabie.hunters_league.service.HuntService;
 import org.rabie.hunters_league.service.ParticipationService;
 import org.rabie.hunters_league.service.UserService;
+import org.rabie.hunters_league.service.dto.UserSearchDto;
 import org.rabie.hunters_league.web.vm.mapper.HuntMapper;
 import org.rabie.hunters_league.web.vm.mapper.ParticipationMapper;
 import org.rabie.hunters_league.web.vm.mapper.UserMapper;
@@ -17,6 +18,9 @@ import org.rabie.hunters_league.web.vm.response.*;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -33,6 +37,7 @@ public class ParticipationController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final HuntMapper huntMapper;
+
 
     public ParticipationController(ParticipationService participationService, ParticipationMapper participationMapper, CompetitionService competitionService,
                                     UserService userService, HuntService huntService, UserMapper userMapper,HuntMapper huntMapper)
@@ -55,7 +60,11 @@ public class ParticipationController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('MEMBER')")
     public ResponseEntity<ParticipationResponseVm> createParticipation(@Valid @RequestBody CreateParticipationVm createParticipationVm) {
-        AppUser appUser = userService.getById(createParticipationVm.getUserId());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserSearchDto userSearchDto = new UserSearchDto();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        userSearchDto.setUsername(userDetails.getUsername());
+        AppUser appUser = userService.searchUsers(userSearchDto,0,1).getContent().get(0);
         Competition competition = competitionService.getById(createParticipationVm.getCompetitionId());
         Participation participation = new Participation();
         participation.setAppUser(appUser);
@@ -75,10 +84,15 @@ public class ParticipationController {
     }
 
 
-    @GetMapping("/getMyResult/{userId}")
+    @GetMapping("/getMyResult")
     @PreAuthorize("hasRole('MEMBER')")
-    public UserResultsResponseVm deleteCompetition(@PathVariable UUID userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        List<Participation> participation = participationService.findByUserId(userId, page, size);
+    public UserResultsResponseVm deleteCompetition(@PathVariable @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserSearchDto userSearchDto = new UserSearchDto();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        userSearchDto.setUsername(userDetails.getUsername());
+        AppUser appUser = userService.searchUsers(userSearchDto,0,1).getContent().get(0);
+        List<Participation> participation = participationService.findByUserId(appUser.getId(), page, size);
         if(!participation.isEmpty()) {
             UserResultsResponseVm userResultsResponseVm = new UserResultsResponseVm();
             userResultsResponseVm.setUser(userMapper.toUserResponseVm(participation.get(0).getAppUser()));
@@ -123,11 +137,33 @@ public class ParticipationController {
         userHVM.setPastCompetitions(pastCompetitionsResponseVmList);
         return userHVM;
     }
+
+
     @GetMapping("/getTop3")
     @PreAuthorize("hasRole('MEMBER')")
     public List<UserResultsResponseVm> getTop3() {
-        List<Participation> participation = participationService.getTop3ParticipationOrderByScoreDesc();
-        return participation.stream().map(participationMapper::toUserResultsResponseVm).toList();
+        Page<Participation> participation = participationService.getTop3ParticipationOrderByScoreDesc();
+        List<UserResultsResponseVm> userResultsResponseVmList = new ArrayList<>();
+        participation.getContent().forEach(comp->{
+            UserResultsResponseVm userResultsResponseVm = new UserResultsResponseVm();
+            userResultsResponseVm.setUser(userMapper.toUserResponseVm(comp.getAppUser()));
+            List<CompetitionResults> competitionResultsList = new ArrayList<>();
+            CompetitionResults competitionResults = new CompetitionResults();
+            List<HuntResponseWithoutParticipationVm> huntResponseVmList = new ArrayList<>();
+            comp.getHunts().forEach(hunt -> {
+                huntResponseVmList.add(huntMapper.toHuntResponseWithoutParticipationVm(hunt));
+            });
+            competitionResults.setId(comp.getCompetition().getId());
+            competitionResults.setCode(comp.getCompetition().getCode());
+            competitionResults.setDate(comp.getCompetition().getDate());
+            competitionResults.setLocation(comp.getCompetition().getLocation());
+            competitionResults.setScore(comp.getScore());
+            competitionResults.setListHunt(huntResponseVmList);
+            competitionResultsList.add(competitionResults);
+            userResultsResponseVm.setCompetitions(competitionResultsList);
+            userResultsResponseVmList.add(userResultsResponseVm);
+        });
+        return userResultsResponseVmList;
     }
 
 

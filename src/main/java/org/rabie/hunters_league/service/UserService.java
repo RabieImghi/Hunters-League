@@ -50,17 +50,6 @@ public class UserService implements UserDetailsService {
         appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
         return userRepository.save(appUser);
     }
-    public AppUser login(AppUser appUser){
-        UserSearchDto searchDto = new UserSearchDto();
-        searchDto.setEmail(appUser.getEmail());
-        AppUser appUserFromDb = userRepository.findOne(UserSpecification.getUsersByCriteria(searchDto)).orElse(null);
-        if(appUserFromDb == null) throw new UserNotExistException("User with email: " + appUser.getEmail() + " not found");
-        else {
-            boolean isPasswordMatch = passwordEncoder.matches(appUser.getPassword(), appUserFromDb.getPassword());
-            if (!isPasswordMatch) throw new UserPasswordWrongException("Error : Password is wrong");
-            return appUserFromDb;
-        }
-    }
     public AppUser update(AppUser appUser) {
         return userRepository.save(appUser);
     }

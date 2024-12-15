@@ -11,8 +11,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CreateParticipationVm {
     @NonNull
-    private UUID userId;
-    @NonNull
     private UUID competitionId;
     private Double score;
 }
