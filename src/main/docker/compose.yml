@@ -14,3 +14,6 @@ services:
 volumes:
   postgres_data:
     driver: local
+networks:
+  samurai_network:
+    driver: bridge
