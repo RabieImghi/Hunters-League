@@ -24,6 +24,20 @@ spring:
         jwt:
           issuer-uri: http://localhost:8080/realms/Hunters_league
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+      client:
+        registration:
+          github:
+            client-id: Ov23li8JUOoHyVG62Ss9
+            client-secret: 57d36a562a22da84b4e06c22b9db5943b27cc5eb
+            redirect-uri: "https://localhost:443/login/oauth2/code/github"
+            scope: read:user, user:email
+            authorization-grant-type: authorization_code
+        provider:
+          github:
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
+            user-name-attribute: login
 
   #datasource:
   #  driver-class-name: org.postgresql.Driver
