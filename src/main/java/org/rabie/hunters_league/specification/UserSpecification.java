@@ -34,6 +34,4 @@ public class UserSpecification {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
-
-    //change
 }
